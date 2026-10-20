@@ -1,0 +1,23 @@
+name: Build Web App to AAB
+on: [workflow_dispatch]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+
+      - name: Install NativePWAs / Bubblewrap
+        run: npm install -g @bubblewrap/cli
+
+      - name: Generate Android Manifest and AAB
+        run: |
+          bubblewrap init --manifest=https://signal-asset-integra-g9iq.bolt.host/manifest.json --directory=android-app --defaults
+          cd android-app
+          bubblewrap build --skipKeytoolSetup
